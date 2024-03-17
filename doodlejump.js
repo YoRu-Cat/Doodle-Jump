@@ -56,6 +56,8 @@ window.onload = function () {
   document.addEventListener("keydown", moveDoodler);
 };
 function update() {
+  context.clearRect(0, 0, board.width, board.height);
+  doodler.x += velocityX;
   context.drawImage(
     doodler.img,
     doodler.x,
