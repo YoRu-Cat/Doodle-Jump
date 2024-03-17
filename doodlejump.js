@@ -11,6 +11,8 @@ let doodlerX = boardWidth / 2 - doodlerWidth / 2;
 let doodlerY = boardHeight * (7 / 8) - doodlerHeight;
 let doodlerLeftImage;
 let doodlerRightImage;
+// physics
+let velocityX = 0;
 
 let doodler = {
   img: null,
@@ -51,6 +53,7 @@ window.onload = function () {
   doodlerLeftImage.src = "doodler-left.png";
 
   setInterval(update, 1000 / fps);
+  document.addEventListener("keydown", moveDoodler);
 };
 function update() {
   context.drawImage(
@@ -61,4 +64,14 @@ function update() {
     doodler.height
   );
   console.log("nigga");
+}
+
+function moveDoodler(e) {
+  if (e.code == "ArrowRight" || e.code == "KeyD") {
+    velocityX = 4;
+    doodler.img = doodlerRightImage;
+  } else if (e.code == "ArrowLeft" || e.code == "KeyA") {
+    velocityX = -4;
+    doodler.img = doodlerLeftImage;
+  }
 }
