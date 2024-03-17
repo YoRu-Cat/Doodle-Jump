@@ -3,7 +3,7 @@ let board;
 let boardWidth = 360;
 let boardHeight = 576;
 let context;
-
+let fps = 75;
 // doodler
 let doodlerWidth = 46;
 let doodlerHeight = 46;
@@ -46,4 +46,19 @@ window.onload = function () {
       doodler.height
     );
   };
+
+  doodlerLeftImage = new Image();
+  doodlerLeftImage.src = "doodler-left.png";
+
+  setInterval(update, 1000 / fps);
 };
+function update() {
+  context.drawImage(
+    doodler.img,
+    doodler.x,
+    doodler.y,
+    doodler.width,
+    doodler.height
+  );
+  console.log("nigga");
+}
