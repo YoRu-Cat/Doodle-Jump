@@ -35,6 +35,7 @@ let platformImg;
 // score
 let score = 0;
 let maxScore = 0;
+let gameOver = false;
 
 window.onload = function () {
   // draw the board
@@ -76,6 +77,10 @@ window.onload = function () {
   document.addEventListener("keydown", moveDoodler);
 };
 function update() {
+  if (gameOver) {
+    return;
+  }
+
   context.clearRect(0, 0, board.width, board.height);
 
   // doodler
@@ -94,7 +99,9 @@ function update() {
   );
   velocityY += gravity;
   doodler.y += velocityY;
-
+  if (doodler.y - 20 > board.height) {
+    gameOver = true;
+  }
   // platform
   for (let i = 0; i < platformArray.length; i++) {
     let platform = platformArray[i];
@@ -124,6 +131,13 @@ function update() {
   context.fillStyle = "black";
   context.font = "16px sans-serif";
   context.fillText(score, 5, 20);
+  if (gameOver) {
+    context.fillText(
+      "Game Over: Press 'Space' to Restart",
+      boardWidth / 7,
+      (boardHeight * 7) / 8
+    );
+  }
 }
 
 function moveDoodler(e) {
@@ -133,6 +147,21 @@ function moveDoodler(e) {
   } else if (e.code == "ArrowLeft" || e.code == "KeyA") {
     velocityX = -4;
     doodler.img = doodlerLeftImage;
+  } else if (e.code == "Space" && gameOver) {
+    // reset
+    doodler = {
+      img: doodlerRightImage,
+      x: doodlerX,
+      y: doodlerY,
+      width: doodlerWidth,
+      height: doodlerHeight,
+    };
+    velocityX = 0;
+    velocityY = initialVelocityY;
+    score = 0;
+    maxScore = 0;
+    gameOver = false;
+    placePlatforms();
   }
 }
 function placePlatforms() {
