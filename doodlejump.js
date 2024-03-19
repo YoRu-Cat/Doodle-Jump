@@ -3,7 +3,7 @@ let board;
 let boardWidth = 360;
 let boardHeight = 576;
 let context;
-let fps = 75;
+let fps = 60;
 // doodler
 let doodlerWidth = 46;
 let doodlerHeight = 46;
@@ -13,6 +13,15 @@ let doodlerLeftImage;
 let doodlerRightImage;
 // physics
 let velocityX = 0;
+let velocityY = 0; // doodler jump speed
+let initialVelocityY = -8; // starting velocity Y
+let gravity = 0.4;
+
+// platforms
+let platformArray = [];
+let platformWidth = 60;
+let platformHeight = 18;
+let platformImg;
 
 let doodler = {
   img: null,
@@ -52,12 +61,25 @@ window.onload = function () {
   doodlerLeftImage = new Image();
   doodlerLeftImage.src = "doodler-left.png";
 
+  platformImg = new Image();
+  platformImg.src = "platform.png";
+
+  velocityY = initialVelocityY;
+  placePlatforms();
+
   setInterval(update, 1000 / fps);
   document.addEventListener("keydown", moveDoodler);
 };
 function update() {
   context.clearRect(0, 0, board.width, board.height);
+
+  // doodler
   doodler.x += velocityX;
+  if (doodler.x > boardWidth) {
+    doodler.x = 0;
+  } else if (doodler.x + doodler.width < 0) {
+    doodler.x = boardWidth;
+  }
   context.drawImage(
     doodler.img,
     doodler.x,
@@ -65,6 +87,23 @@ function update() {
     doodler.width,
     doodler.height
   );
+  velocityY += gravity;
+  doodler.y += velocityY;
+
+  // platform
+  for (let i = 0; i < platformArray.length; i++) {
+    let platform = platformArray[i];
+    if (detectCollision(doodler, platform)) {
+      velocityY = initialVelocityY; // jump
+    }
+    context.drawImage(
+      platform.img,
+      platform.x,
+      platform.y,
+      platform.width,
+      platform.height
+    );
+  }
   console.log("nigga");
 }
 
@@ -76,4 +115,34 @@ function moveDoodler(e) {
     velocityX = -4;
     doodler.img = doodlerLeftImage;
   }
+}
+function placePlatforms() {
+  platformArray = [];
+
+  //starting platform
+  let platform = {
+    img: platformImg,
+    x: boardWidth / 2,
+    y: boardHeight - 50,
+    width: platformWidth,
+    height: platformHeight,
+  };
+  platformArray.push(platform);
+
+  platform = {
+    img: platformImg,
+    x: boardWidth / 2,
+    y: boardHeight - 150,
+    width: platformWidth,
+    height: platformHeight,
+  };
+  platformArray.push(platform);
+}
+function detectCollision(a, b) {
+  return (
+    a.x < b.x + b.width &&
+    a.x + a.width > b.x &&
+    a.y < b.y + b.height &&
+    a.y + a.height > b.y
+  );
 }
