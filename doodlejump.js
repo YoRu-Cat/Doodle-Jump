@@ -32,6 +32,10 @@ let platformWidth = 60;
 let platformHeight = 18;
 let platformImg;
 
+// score
+let score = 0;
+let maxScore = 0;
+
 window.onload = function () {
   // draw the board
   board = document.getElementById("board");
@@ -114,7 +118,12 @@ function update() {
     platformArray.shift(); // remove first element form the array
     newPlatform(); // replace first element with new one to create new platform
   }
-  console.log("nigga");
+
+  // score
+  updateScore();
+  context.fillStyle = "black";
+  context.font = "16px sans-serif";
+  context.fillText(score, 5, 20);
 }
 
 function moveDoodler(e) {
@@ -147,12 +156,12 @@ function placePlatforms() {
   //   height: platformHeight,
   // };
   // platformArray.push(platform);
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 6; i++) {
     let randomX = Math.floor((Math.random() * boardWidth * 3) / 4);
     let platform = {
       img: platformImg,
       x: randomX,
-      y: boardHeight - 75 * i - 150,
+      y: boardHeight - 75 * i - 170,
       width: platformWidth,
       height: platformHeight,
     };
@@ -178,4 +187,16 @@ function detectCollision(a, b) {
     a.y < b.y + b.height &&
     a.y + a.height > b.y
   );
+}
+function updateScore() {
+  let points = Math.floor(50 * Math.random());
+  if (velocityY < 0) {
+    // negative going up
+    maxScore += points;
+    if (score < maxScore) {
+      score = maxScore;
+    }
+  } else if (velocityY >= 0) {
+    maxScore -= points;
+  }
 }
