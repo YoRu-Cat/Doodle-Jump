@@ -11,6 +11,15 @@ let doodlerX = boardWidth / 2 - doodlerWidth / 2;
 let doodlerY = boardHeight * (7 / 8) - doodlerHeight;
 let doodlerLeftImage;
 let doodlerRightImage;
+
+let doodler = {
+  img: null,
+  x: doodlerX,
+  y: doodlerY,
+  width: doodlerWidth,
+  height: doodlerHeight,
+};
+
 // physics
 let velocityX = 0;
 let velocityY = 0; // doodler jump speed
@@ -22,14 +31,6 @@ let platformArray = [];
 let platformWidth = 60;
 let platformHeight = 18;
 let platformImg;
-
-let doodler = {
-  img: null,
-  x: doodlerX,
-  y: doodlerY,
-  width: doodlerWidth,
-  height: doodlerHeight,
-};
 
 window.onload = function () {
   // draw the board
@@ -93,7 +94,10 @@ function update() {
   // platform
   for (let i = 0; i < platformArray.length; i++) {
     let platform = platformArray[i];
-    if (detectCollision(doodler, platform)) {
+    if (velocityY < 0 && doodler.y < boardHeight * (3 / 4)) {
+      platform.y -= initialVelocityY; // slide platform down
+    }
+    if (detectCollision(doodler, platform) && velocityY >= 0) {
       velocityY = initialVelocityY; // jump
     }
     context.drawImage(
@@ -103,6 +107,12 @@ function update() {
       platform.width,
       platform.height
     );
+  }
+  // create platforms and add new ones
+
+  while (platformArray.length > 0 && platformArray[0].y >= boardHeight) {
+    platformArray.shift(); // remove first element form the array
+    newPlatform(); // replace first element with new one to create new platform
   }
   console.log("nigga");
 }
@@ -123,21 +133,44 @@ function placePlatforms() {
   let platform = {
     img: platformImg,
     x: boardWidth / 2,
-    y: boardHeight - 50,
+    y: boardHeight - 75,
     width: platformWidth,
     height: platformHeight,
   };
   platformArray.push(platform);
 
-  platform = {
+  // platform = {
+  //   img: platformImg,
+  //   x: boardWidth / 2,
+  //   y: boardHeight - 150,
+  //   width: platformWidth,
+  //   height: platformHeight,
+  // };
+  // platformArray.push(platform);
+  for (let i = 0; i < 7; i++) {
+    let randomX = Math.floor((Math.random() * boardWidth * 3) / 4);
+    let platform = {
+      img: platformImg,
+      x: randomX,
+      y: boardHeight - 75 * i - 150,
+      width: platformWidth,
+      height: platformHeight,
+    };
+    platformArray.push(platform);
+  }
+}
+function newPlatform() {
+  let randomX = Math.floor(Math.random() * boardWidth * (3 / 4));
+  let platform = {
     img: platformImg,
-    x: boardWidth / 2,
-    y: boardHeight - 150,
+    x: randomX,
+    y: -platformHeight,
     width: platformWidth,
     height: platformHeight,
   };
   platformArray.push(platform);
 }
+
 function detectCollision(a, b) {
   return (
     a.x < b.x + b.width &&
