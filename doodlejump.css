@@ -8,3 +8,13 @@ body {
   /* background-color: green; */
   background-image: url("doodlejumpbg.png");
 }
+@media (max-width: 768px) {
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+}
