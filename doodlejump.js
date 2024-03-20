@@ -4,6 +4,10 @@ let boardWidth = 360;
 let boardHeight = 576;
 let context;
 let fps = 60;
+let leftBtn;
+let rightBtn;
+let resetBtn;
+
 // doodler
 let doodlerWidth = 46;
 let doodlerHeight = 46;
@@ -43,7 +47,9 @@ window.onload = function () {
   board.height = boardHeight;
   board.width = boardWidth;
   context = board.getContext("2d");
-
+  leftBtn = document.getElementById("left");
+  rightBtn = document.getElementById("right");
+  resetBtn = document.getElementById("reset");
   // draw the doodler
   /*
   context.fillStyle = "green";
@@ -75,6 +81,31 @@ window.onload = function () {
 
   setInterval(update, 1000 / fps);
   document.addEventListener("keydown", moveDoodler);
+  leftBtn.onclick = function () {
+    velocityX = -4;
+    doodler.img = doodlerLeftImage;
+  };
+  rightBtn.onclick = function () {
+    velocityX = 4;
+    doodler.img = doodlerRightImage;
+  };
+  resetBtn.onclick = function () {
+    if (gameOver) {
+      doodler = {
+        img: doodlerRightImage,
+        x: doodlerX,
+        y: doodlerY,
+        width: doodlerWidth,
+        height: doodlerHeight,
+      };
+      velocityX = 0;
+      velocityY = initialVelocityY;
+      score = 0;
+      maxScore = 0;
+      gameOver = false;
+      placePlatforms();
+    }
+  };
 };
 function update() {
   if (gameOver) {

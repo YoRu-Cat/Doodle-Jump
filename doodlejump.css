@@ -3,6 +3,9 @@ body {
   background: #ff9f1c;
   margin-top: 8rem;
 }
+#buttons button {
+  display: none;
+}
 
 #board {
   /* background-color: green; */
@@ -16,5 +19,25 @@ body {
     align-items: center;
     margin: 0;
     padding: 0;
+  }
+  #canvas-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  #buttons {
+    position: absolute;
+    top: 92%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  #buttons button {
+    display: flex;
+    flex: auto;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    font-size: 1.6rem;
   }
 }
